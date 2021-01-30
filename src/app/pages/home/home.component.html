@@ -1,1 +1,68 @@
-<p>home works!</p>
+<div class="home">
+     <app-wy-carousel #wyCarousel [activeIndex]="carouselActiveIndex" (changeSlide)="onChangeSlide($event)"> <!--Name the element as "wyCarousel" -->
+        <nz-carousel 
+        nzAutoPlay 
+        [nzEffect]="'scrollx'" 
+        style="height: 360px;" 
+        [nzDotRender]="wyCarousel.dotRef" 
+        (nzBeforeChange)="onBeforeChange($event)"> <!--Ref the element: "wyCarousel.dotRef"-->
+            <div class="carousel-item" nz-carousel-content *ngFor = "let item of banners" > 
+                <a [href]="item.url" target="_blank" class="banner-item">
+                    <img [src]="item.imageUrl" />
+                </a>
+            </div>
+        </nz-carousel>
+    </app-wy-carousel>
+    <!-- <div class="main">
+        <div class="wrap">
+            <div class="left">
+                <div class="sec">
+                    <div class="up">
+                        <div class="navs">
+                            <h2>
+                                <i></i>
+                                <a>热门标签</a>
+                            </h2>
+                            <nav>
+                                <a *ngFor = "let item of hotTags">{{item.name}}</a>
+                            </nav>
+                        </div>
+                        <a>更多
+                            <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+                        </a>
+                    </div>
+                    <div class="down">
+                        <div class="down-wrap">
+                            <app-single-sheet 
+                            class="sheet-item"
+                            *ngFor = "let item of songSheetList"
+                            [sheet] = "item"
+                            (onPlay) = "onPlaySheet($event)"
+                            >
+                            </app-single-sheet>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <app-member-card></app-member-card>
+                <div class="settled-singer">
+                    <div class="tlt"><b>入驻歌手</b></div>
+                    <div class="list">
+                        <div class="card" *ngFor="let item of singers">
+                            <div class="pic">
+                                <img [src]="item.picUrl" [alt]="item.name">
+                            </div>
+                            <div class="txt">
+                                <b class="ellipsis">{{item.name}}</b>
+                                <span>专辑数：{{item.albumSize}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+</div> 
+
+<!-- [nzDotRender]="wyCarousel.dotRef" -->

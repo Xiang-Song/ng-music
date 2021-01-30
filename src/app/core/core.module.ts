@@ -30,6 +30,7 @@ registerLocaleData(en);
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
 })
+
 export class CoreModule { 
   constructor(@SkipSelf() @Optional() parentModule: CoreModule) {
     if (parentModule) {
