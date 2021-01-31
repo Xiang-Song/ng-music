@@ -4,6 +4,7 @@ import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 import { map } from 'rxjs/internal/operators';
 import { Banner, HotTag, Singer, SongSheet } from 'src/app/services/data-types/common.types';
 import { HomeService } from 'src/app/services/home.service';
+import { SheetService } from 'src/app/services/sheet.service';
 import { SingerService } from 'src/app/services/singer.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   @ViewChild(NzCarouselComponent, {static: true}) private nzCarousel!: NzCarouselComponent;
   
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sheetServe: SheetService
     ) { 
       this.route.data.pipe(map(res => res.HomeDatas)).subscribe(([banners, hotTags, songSheetList, singers]) => {
         this.banners = banners;
@@ -43,6 +45,23 @@ export class HomeComponent implements OnInit {
 
   onChangeSlide(type: 'pre' | 'next'){
     this.nzCarousel[type]();
+  }
+
+  onPlaySheet(id: number){
+    console.log("id: ", id);
+    this.sheetServe.playSheet(id).subscribe(list => {
+      console.log('list: ', list);
+    //   this.store$.dispatch(SetSongList({ songList: list}));
+
+    //   let trueIndex = 0;
+    //   let trueList = list.slice();
+    //   if (this.playerState?.playMode.type === 'random'){
+    //     trueList = shuffle(list || []);
+    //     trueIndex = findIndex(trueList, list[trueIndex])
+    //   } 
+    //   this.store$.dispatch(SetPlayList({ playList: trueList}));
+    //   this.store$.dispatch(SetCurrentIndex({ currentIndex: trueIndex}));
+    })
   }
 
 }

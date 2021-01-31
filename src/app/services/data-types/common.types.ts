@@ -28,6 +28,11 @@ export interface Song {
   dt: number;
 }
 
+export interface SongUrl {
+  id: number;
+  url: string;
+}
+
 //SongSheet
 export interface SongSheet {
   id: number;

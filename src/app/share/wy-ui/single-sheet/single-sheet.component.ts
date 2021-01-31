@@ -10,14 +10,14 @@ import { SongSheet } from 'src/app/services/data-types/common.types';
 export class SingleSheetComponent implements OnInit {
 
   @Input() sheet:SongSheet;
-  // @Output() onPlay = new EventEmitter<number>();
+  @Output() onPlay = new EventEmitter<number>();
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  // playSheet(id: number){
-  //   this.onPlay.emit(id);
-  // }
+  playSheet(id: number){
+    this.onPlay.emit(id);
+  }
 
 }
