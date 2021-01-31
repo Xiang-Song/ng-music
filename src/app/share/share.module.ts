@@ -28,6 +28,6 @@ import { WyUiModule } from './wy-ui/wy-ui.module';
     NzInputModule,
     NzCarouselModule,
     WyUiModule,
-  ]
+  ],
 })
 export class ShareModule { }

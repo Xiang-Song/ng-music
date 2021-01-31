@@ -8,21 +8,21 @@
     <div class="container">
         <div class="wrap">
             <div class="btns">
-                <i class="prev" ></i>
-                <i class="toggle" ></i>
-                <i class="next" ></i>
+                <i class="prev" (click)="onPrev(currentIndex - 1)" ></i>
+                <i class="toggle" [class.playing]="playing" (click)="onToggle()"></i>
+                <i class="next" (click)="onNext(currentIndex + 1)"></i>
             </div>
             <div class="head">
-                <img src="" >
+                <img [src]="picUrl" >
                 <i class="mask"></i>
             </div>
             <div class="play">
-                <div class="words clearfix hide">
-                    <p class="ellipsis margin-bottom-none">song name</p>
+                <div class="words clearfix">
+                    <p class="ellipsis margin-bottom-none">{{ currentSong?.name}}</p>
                     <ul class="songs clearfix margin-bottom-none">
-                        <li >
-                            <em><a>singer name</a></em>
-                            <span>/</span>
+                        <li *ngFor= "let item of currentSong?.ar; last as isLast ">
+                            <em><a>{{item.name}}</a></em>
+                            <span [hidden]='isLast'>/</span>
                         </li>
                     </ul>
                 </div>
@@ -31,7 +31,7 @@
                         <app-wy-slider ></app-wy-slider>
                     </div>
                     <span class="time">
-                        <em>2:30</em> / 3:50
+                        <em>{{currentTime | formatTime}}</em> / {{duration | formatTime}}
                     </span>
                 </div>
             </div>
@@ -67,12 +67,10 @@
     #audio
     [src]="currentSong?.url"
     (canplay) = "onCanPlay()"
-    
+    (timeupdate) = "onTimeUpdate($event)"
+    (ended) = "onEnded()"
     >
 
     </audio>
 
-<!-- (canplay) = "onCanPlay()"
-    (timeupdate) = "onTimeUpdate($event)"
-    (ended) = "onEnded()" -->
 </div>
