@@ -17,7 +17,7 @@
                 <i class="mask"></i>
             </div>
             <div class="play">
-                <div class="words clearfix" [hidden]="true">
+                <div class="words clearfix hide">
                     <p class="ellipsis margin-bottom-none">song name</p>
                     <ul class="songs clearfix margin-bottom-none">
                         <li >
@@ -28,7 +28,7 @@
                 </div>
                 <div class="bar">
                     <div class="slider-wrap">
-                        <!-- <app-wy-slider [bufferOffset] = 'bufferPercent' [(ngModel)] = 'percent' (wyOnAfterChange)="onPercentChange($event)"></app-wy-slider> -->
+                        <app-wy-slider ></app-wy-slider>
                     </div>
                     <span class="time">
                         <em>2:30</em> / 3:50
@@ -46,7 +46,7 @@
                     <span></span>
                 </p>
                 <div class="control-vol" >
-                    <!-- <app-wy-slider [wyVertical] = 'true' [(ngModel)] = 'volume' (ngModelChange)="onVolumeChange($event)"></app-wy-slider> -->
+                    <app-wy-slider [wyVertical] = 'true' ></app-wy-slider>
                 </div>
             </div>
 
