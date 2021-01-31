@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { StoreModule } from '@ngrx/store';
 
 
 
@@ -10,8 +9,7 @@ import { StoreModule } from '@ngrx/store';
     AppComponent
   ],
   imports: [
-    CoreModule,
-    StoreModule.forRoot({}, {})
+    CoreModule
   ],
   bootstrap: [AppComponent]
 })
