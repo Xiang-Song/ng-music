@@ -4,9 +4,23 @@ import { select, Store } from '@ngrx/store';
 import { fromEvent, Subscription } from 'rxjs';
 import { Song } from 'src/app/services/data-types/common.types';
 import { AppStoreModule } from 'src/app/store';
-import { SetCurrentIndex, SetPlayList } from 'src/app/store/actions/player.action';
+import { SetCurrentIndex, SetPlayList, SetPlayMode } from 'src/app/store/actions/player.action';
 import { getCurrentIndex, getCurrentSong, getPlayer, getPlayList, getPlayMode, getSongList } from 'src/app/store/selectors/player.selector';
+import { findIndex, shuffle } from 'src/app/utils/array';
 import { PlayMode } from './player-type';
+
+
+const modeTypes: PlayMode[] = [{
+  type: 'loop',
+  label: '循环'
+}, {
+  type: 'random',
+  label: '随机'
+}, {
+  type: 'singleLoop',
+  label: '单曲循环'
+}];
+
 
 @Component({
   selector: 'app-wy-player',
@@ -75,26 +89,35 @@ export class WyPlayerComponent implements OnInit {
   }
 
   private watchPlayMode(mode: PlayMode) {
-    // this.currentMode = mode;
-    // if (this.songList) {
-    //   let list = this.songList.slice();
-    //   if (mode.type === 'random') {
-    //     list = shuffle(this.songList);
-    //   }
-    //   this.updateCurrentIndex(list, this.currentSong);
-    //   this.store$.dispatch(SetPlayList({ playList: list }));
-    // }
+    this.currentMode = mode;
+    if (this.songList) {
+      let list = this.songList.slice();
+      if (mode.type === 'random') {
+        list = shuffle(this.songList);
+      }
+      this.updateCurrentIndex(list, this.currentSong);
+      this.store$.dispatch(SetPlayList({ playList: list }));
+    }
   }
 
   private watchCurrentSong(song: Song) {
     this.currentSong = song;
-  //   this.bufferPercent = 0;
+    this.bufferPercent = 0;
     if (song) {
       this.duration = song.dt / 1000;
     }
   console.log("song: ", song);
   }
 
+  private updateCurrentIndex(list: Song[], song: Song) {
+    const newIndex = findIndex(list, song);
+    this.store$.dispatch(SetCurrentIndex({ currentIndex: newIndex }));
+  }
+
+  // switch play mode
+  changeMode(){
+    this.store$.dispatch(SetPlayMode({ playMode: modeTypes[++this.modeCount % 3] }));
+  }
 
   // slider control song
   onPercentChange(per: number){
