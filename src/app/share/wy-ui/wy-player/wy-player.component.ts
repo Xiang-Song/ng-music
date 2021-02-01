@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { fromEvent, Subscription } from 'rxjs';
 import { Song } from 'src/app/services/data-types/common.types';
 import { AppStoreModule } from 'src/app/store';
 import { SetCurrentIndex, SetPlayList } from 'src/app/store/actions/player.action';
@@ -44,6 +45,7 @@ export class WyPlayerComponent implements OnInit {
   // whether the click within the panel
   selfClick = false;
 
+  private winClick: Subscription;
 
   @ViewChild('audio', { static: true}) private audio: ElementRef;
   private audioEl: HTMLAudioElement;
@@ -94,6 +96,60 @@ export class WyPlayerComponent implements OnInit {
   }
 
 
+  // slider control song
+  onPercentChange(per: number){
+    if (this.currentSong) {
+      const currentTime =  this.duration * (per / 100);
+      this.audioEl.currentTime = currentTime;
+    }
+  }
+
+  // volume control
+  onVolumeChange(per: number){
+    this.audioEl.volume = per / 100;
+  }
+
+  // control volume panel display
+  toggleVolPanel() {
+    this.togglePanel('showVolumePanel');
+  }
+
+   // control list and lyric panel display
+   toggleListPanel() {
+     if(this.songList.length){
+      this.togglePanel('showPanel');
+     }
+    
+  }
+
+  togglePanel(type: string){
+    this[type]= !this[type];
+    if(this.showVolumePanel || this.showPanel){
+      this.bindDocumentClickListener();
+    } else {
+      this.unbindDocumentClickListener();
+    }
+  }
+
+  private bindDocumentClickListener(){
+    if(!this.winClick){
+      this.winClick = fromEvent(this.doc, 'click').subscribe(()=>{
+        if(!this.selfClick) { //click outside of panel
+          this.showVolumePanel = false;
+          this.showPanel = false;
+          this.unbindDocumentClickListener();
+        }
+        this.selfClick = false;
+      })
+    }
+  }
+
+  private unbindDocumentClickListener(){
+    if(this.winClick){
+      this.winClick.unsubscribe();
+      this.winClick = null;
+    }
+  }
 
   // play/pause
   onToggle(){
