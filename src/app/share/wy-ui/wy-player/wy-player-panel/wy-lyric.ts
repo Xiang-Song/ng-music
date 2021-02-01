@@ -1,4 +1,4 @@
-import { from, zip } from "rxjs";
+import { from, Subject, zip } from "rxjs";
 import { skip } from "rxjs/internal/operators";
 import { Lyric } from "src/app/services/data-types/common.types";
 
@@ -14,12 +14,21 @@ interface lyricLine extends BaseLyricLine{
     time: number
 }
 
+interface Handler extends BaseLyricLine{
+    lineNum: number
+}
+
 export class WyLyric{
     private lrc: Lyric;
     lines: lyricLine[] = [];
 
     private playing = false;
-    private curNum!: number;
+    private curNum: number;
+    private startStamp: number;
+    private pauseStamp: number;
+    private timer: any;
+
+    handler = new Subject<Handler>();
 
     constructor(lrc: Lyric){
         this.lrc = lrc;
@@ -98,5 +107,64 @@ export class WyLyric{
             }
 
         }
+    }
+
+    play(startTime = 0){
+        if (!this.lines.length) return;
+        if (!this.playing){
+            this.playing = true;
+        }
+        this.curNum = this.findCurNum(startTime);
+        console.log("🚀 ~ file: wy-lyric.ts ~ line 109 ~ WyLyric ~ play ~ curNum", this.curNum);
+        this.startStamp = Date.now() - startTime;
+
+        if(this.curNum < this.lines.length){
+            clearTimeout(this.timer);
+            this.playReset();
+        }
+    }
+
+    private playReset(){
+        let line = this.lines[this.curNum];
+        const delay = line.time - (Date.now() - this.startStamp)
+        this.timer = setTimeout(() =>{
+            this.callHandler(this.curNum++);
+            if(this.curNum < this.lines.length && this.playing){
+                this.playReset();
+            }
+        }, delay)
+    }
+
+    private callHandler(i: number){
+        this.handler.next({
+            txt: this.lines[i].txt,
+            txtCn: this.lines[i].txtCn,
+            lineNum: i
+        });
+    }
+
+    // input is time in millisecond, output is the index of one lyric line corresponding to that time
+    private findCurNum(time: number): number{
+        const index = this.lines.findIndex(item => time <= item.time);
+        return index === -1 ? this.lines.length -1 : index;
+    }
+
+    togglePlay(playing: boolean){
+        const now = Date.now();
+        this.playing =playing;
+        if(playing){
+            const startTime = (this.pauseStamp || now) - (this.startStamp || now);
+            this.play(startTime);
+        } else {
+            this.stop();
+            this.pauseStamp = now;
+        }
+    }
+
+    private stop(){
+        if(this.playing){
+            this.playing = false;
+        }
+        clearTimeout(this.timer);
     }
 }
