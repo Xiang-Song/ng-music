@@ -41,3 +41,9 @@ export interface SongSheet {
   playCount: number;
   tracks: Song[];
 }
+
+//lyric
+export interface Lyric {
+  lyric: string;
+  tlyric: string;
+}
