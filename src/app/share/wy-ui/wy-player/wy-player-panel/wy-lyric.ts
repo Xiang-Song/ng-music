@@ -1,3 +1,5 @@
+import { from, zip } from "rxjs";
+import { skip } from "rxjs/internal/operators";
 import { Lyric } from "src/app/services/data-types/common.types";
 
 const timeExp = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
@@ -39,42 +41,45 @@ export class WyLyric{
     }
 
     private generTLyric(){
-        // const lines = this.lrc.lyric.split('\n');
-        // // console.log("lines", lines)
-        // const tlines = this.lrc.tlyric.split('\n').filter(item => timeExp.exec(item) !== null);
-        // // console.log("tlines", tlines)
-        // const moreLine = lines.length - tlines.length;
-        // let tempArr = [];
-        // if (moreLine >= 0){
-        //     tempArr = [lines, tlines];
-        // } else {
-        //     tempArr = [tlines, lines];
-        // }
+        const lines = this.lrc.lyric.split('\n');
+        // console.log("lines", lines)
+        const tlines = this.lrc.tlyric.split('\n').filter(item => timeExp.exec(item) !== null);
+        // console.log("tlines", tlines)
+        const moreLine = lines.length - tlines.length;
 
-        // const first = timeExp.exec(tempArr[1][0])[0];
-        // // console.log("first", first);
+        // make sure the longer one locate at first place
+        let tempArr = [];
+        if (moreLine >= 0){
+            tempArr = [lines, tlines];
+        } else {
+            tempArr = [tlines, lines];
+        }
 
-        // const skipIndex = tempArr[0].findIndex(item => {
-        //     const exec = timeExp.exec(item);
-        //     if (exec) {
-        //         return exec[0] === first;
-        //     }
-        // })
+        const first = timeExp.exec(tempArr[1][0])[0]; //first time stamp for tlines
+        // console.log("first", first);
 
-        // const _skip = skipIndex === -1 ? 0 : skipIndex;
-        // const skipItems = tempArr[0].slice(0, _skip);
-        // if (skipItems.length){
-        //     skipItems.forEach(line => this.makeLine(line));
-        // }
-        // // console.log("this.lines", this.lines)
+        // find index in lines which has the same time with first item in tlines
+        const skipIndex = tempArr[0].findIndex(item => {
+            const exec = timeExp.exec(item);
+            if (exec) {
+                return exec[0] === first;
+            }
+        })
 
-        // let zipLines$;
-        // if (moreLine > 0) {
-        // zipLines$ = zip(from(lines).pipe(skip(_skip)), from(tlines));
-        // } else {
-        // zipLines$ = zip(from(lines), from(tlines).pipe(skip(_skip)));
-        // }
-        // zipLines$.subscribe(([line, tline]) => this.makeLine(line, tline));
+        const _skip = skipIndex === -1 ? 0 : skipIndex;
+        const skipItems = tempArr[0].slice(0, _skip);
+        if (skipItems.length){
+            skipItems.forEach(line => this.makeLine(line));
+        }
+        // console.log("this.lines", this.lines)
+
+        let zipLines$;
+        if (moreLine > 0) {
+        zipLines$ = zip(from(lines).pipe(skip(_skip)), from(tlines));
+        } else {
+        zipLines$ = zip(from(lines), from(tlines).pipe(skip(_skip)));
+        }
+        zipLines$.subscribe(([line, tline]) => this.makeLine(line, tline));
         
     }
 
