@@ -259,4 +259,9 @@ export class WyPlayerComponent implements OnInit {
     return this.currentSong ? this.currentSong.al.picUrl : '//s4.music.126.net/style/web2/img/default/default_album.jpg';
   }
 
+  // change song in list panel
+  onChangeSong(song: Song){
+    this.updateCurrentIndex(this.playList, song);
+  }
+
 }
