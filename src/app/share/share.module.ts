@@ -7,6 +7,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { WyUiModule } from './wy-ui/wy-ui.module';
 
 
@@ -16,6 +17,7 @@ import { WyUiModule } from './wy-ui/wy-ui.module';
     CommonModule,
     FormsModule,
     NzButtonModule,
+    NzModalModule,
     WyUiModule
   ],
   exports: [
@@ -27,6 +29,7 @@ import { WyUiModule } from './wy-ui/wy-ui.module';
     NzIconModule,
     NzInputModule,
     NzCarouselModule,
+    NzModalModule,
     WyUiModule,
   ],
 })

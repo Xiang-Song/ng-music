@@ -1,15 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { select, Store } from '@ngrx/store';
 import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 import { map } from 'rxjs/internal/operators';
 import { Banner, HotTag, Singer, SongSheet } from 'src/app/services/data-types/common.types';
 import { SheetService } from 'src/app/services/sheet.service';
-import { AppStoreModule } from 'src/app/store';
-import { SetCurrentIndex, SetPlayList, SetSongList } from 'src/app/store/actions/player.action';
-import { PlayState } from 'src/app/store/reducers/player.reducer';
-import { getPlayer } from 'src/app/store/selectors/player.selector';
-import { findIndex, shuffle } from 'src/app/utils/array';
+import { BatchActionsService } from 'src/app/store/batch-actions.service';
+
 
 @Component({
   selector: 'app-home',
@@ -24,14 +20,13 @@ export class HomeComponent implements OnInit {
   songSheetList: SongSheet[];
   singers: Singer[];
 
-  private playerState: PlayState;
 
   @ViewChild(NzCarouselComponent, {static: true}) private nzCarousel!: NzCarouselComponent;
   
   constructor(
     private route: ActivatedRoute,
     private sheetServe: SheetService,
-    private store$: Store<AppStoreModule>,
+    private batchActionsServe: BatchActionsService
     ) { 
       this.route.data.pipe(map(res => res.HomeDatas)).subscribe(([banners, hotTags, songSheetList, singers]) => {
         this.banners = banners;
@@ -40,7 +35,7 @@ export class HomeComponent implements OnInit {
         this.singers = singers;
       })
 
-      this.store$.pipe(select(getPlayer)).subscribe(res => this.playerState = res);
+      
   }
 
   
@@ -59,17 +54,7 @@ export class HomeComponent implements OnInit {
   onPlaySheet(id: number){
     console.log("id: ", id);
     this.sheetServe.playSheet(id).subscribe(list => {
-      console.log('list: ', list);
-      this.store$.dispatch(SetSongList({ songList: list}));
-
-      let trueIndex = 0;
-      let trueList = list.slice();
-      if (this.playerState?.playMode.type === 'random'){
-        trueList = shuffle(list || []);
-        trueIndex = findIndex(trueList, list[trueIndex])
-      } 
-      this.store$.dispatch(SetPlayList({ playList: trueList}));
-      this.store$.dispatch(SetCurrentIndex({ currentIndex: trueIndex}));
+      this.batchActionsServe.selectPlayList({list, index: 0});
     })
   }
 

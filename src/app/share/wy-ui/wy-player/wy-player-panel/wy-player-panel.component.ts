@@ -20,6 +20,8 @@ export class WyPlayerPanelComponent implements OnInit, OnChanges {
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onChangeSong = new EventEmitter<Song>();
+  @Output() onDeleteSong = new EventEmitter<Song>();
+  @Output() onClearSong = new EventEmitter<void>();
 
   scrollY = 0;
 
@@ -46,12 +48,12 @@ export class WyPlayerPanelComponent implements OnInit, OnChanges {
 
     if(changes['songList']){
       // console.log('ppsongList: ', this.songList);
-      this.currentIndex = 0;
+      this.updateCurrentIndex();
     }
     if(changes['currentSong']){
       console.log('currentSong: ', this.currentSong);
       if(this.currentSong){
-        this.currentIndex = findIndex(this.songList, this.currentSong);
+        this.updateCurrentIndex();
         this.updateLyric();
         if(this.show){
           this.scrollToCurrent();
@@ -71,11 +73,14 @@ export class WyPlayerPanelComponent implements OnInit, OnChanges {
         });
       }
     }
+  }
 
+  private updateCurrentIndex(){
+    this.currentIndex = findIndex(this.songList, this.currentSong);
   }
 
   private updateLyric() {
-    this.resetLyric();
+    this.resetLyric(); // reset lyric, lyricRefs, currentLyric and currentLineNum
     this.songServe.getLyric(this.currentSong.id).subscribe(res => {
       this.lyric = new WyLyric(res);
       this.currentLyric = this.lyric.lines;

@@ -1,10 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
 import { fromEvent, Subscription } from 'rxjs';
 import { Song } from 'src/app/services/data-types/common.types';
 import { AppStoreModule } from 'src/app/store';
-import { SetCurrentIndex, SetPlayList, SetPlayMode } from 'src/app/store/actions/player.action';
+import { SetCurrentIndex, SetPlayList, SetPlayMode, SetSongList } from 'src/app/store/actions/player.action';
+import { BatchActionsService } from 'src/app/store/batch-actions.service';
 import { getCurrentIndex, getCurrentSong, getPlayer, getPlayList, getPlayMode, getSongList } from 'src/app/store/selectors/player.selector';
 import { findIndex, shuffle } from 'src/app/utils/array';
 import { PlayMode } from './player-type';
@@ -68,7 +70,9 @@ export class WyPlayerComponent implements OnInit {
 
   constructor(
     private store$: Store<AppStoreModule>,
-    @Inject(DOCUMENT) private doc: Document
+    @Inject(DOCUMENT) private doc: Document,
+    private nzModalserve: NzModalService,
+    private batchActionsServe: BatchActionsService
     ) {
       const appStore$ = this.store$.pipe(select(getPlayer));
       appStore$.pipe(select(getSongList)).subscribe(list => this.watchList(list, 'songList'));
@@ -271,5 +275,21 @@ export class WyPlayerComponent implements OnInit {
   onChangeSong(song: Song){
     this.updateCurrentIndex(this.playList, song);
   }
+
+  // delete song from list panel
+  onDeleteSong(song: Song){
+    this.batchActionsServe.deleteSong(song);
+  }
+
+  //clear whole list from panel
+  onClearSong(){
+    this.nzModalserve.confirm({
+      nzTitle: 'confirm delete the whole list?',
+      nzOnOk: () => {
+        this.batchActionsServe.clearSong();
+      }
+    })
+  }
+  
 
 }
