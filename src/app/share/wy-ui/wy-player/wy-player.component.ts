@@ -59,8 +59,8 @@ export class WyPlayerComponent implements OnInit {
   // show list panel or not
   showPanel = false;
 
-  // whether the click within the panel
-  selfClick = false;
+  // whether bind the click on doc
+  bindFlag = false;
 
   private winClick: Subscription;
 
@@ -125,6 +125,14 @@ export class WyPlayerComponent implements OnInit {
     this.store$.dispatch(SetPlayMode({ playMode: modeTypes[++this.modeCount % 3] }));
   }
 
+  onClickOutSide(){
+  console.log("~ onClickOutSide");
+  this.showVolumePanel = false;
+  this.showPanel = false;
+  this.bindFlag = false;
+    
+  }
+
   // slider control song
   onPercentChange(per: number){
     if (this.currentSong) {
@@ -156,32 +164,28 @@ export class WyPlayerComponent implements OnInit {
 
   togglePanel(type: string){
     this[type]= !this[type];
-    if(this.showVolumePanel || this.showPanel){
-      this.bindDocumentClickListener();
-    } else {
-      this.unbindDocumentClickListener();
-    }
+    this.bindFlag = (this.showVolumePanel || this.showPanel);
   }
 
-  private bindDocumentClickListener(){
-    if(!this.winClick){
-      this.winClick = fromEvent(this.doc, 'click').subscribe(()=>{
-        if(!this.selfClick) { //click outside of panel
-          this.showVolumePanel = false;
-          this.showPanel = false;
-          this.unbindDocumentClickListener();
-        }
-        this.selfClick = false;
-      })
-    }
-  }
+  // private bindDocumentClickListener(){
+  //   if(!this.winClick){
+  //     this.winClick = fromEvent(this.doc, 'click').subscribe(()=>{
+  //       if(!this.selfClick) { //click outside of panel
+  //         this.showVolumePanel = false;
+  //         this.showPanel = false;
+  //         this.unbindDocumentClickListener();
+  //       }
+  //       this.selfClick = false;
+  //     })
+  //   }
+  // }
 
-  private unbindDocumentClickListener(){
-    if(this.winClick){
-      this.winClick.unsubscribe();
-      this.winClick = null;
-    }
-  }
+  // private unbindDocumentClickListener(){
+  //   if(this.winClick){
+  //     this.winClick.unsubscribe();
+  //     this.winClick = null;
+  //   }
+  // }
 
   // play/pause
   onToggle(){
