@@ -123,6 +123,12 @@ export class WyPlayerPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  seekLyric(time: number) {
+    if (this.lyric) {
+      this.lyric.seek(time);
+    }
+  }
+
   private scrollToCurrent(speed = 300){
     const songListRefs = this.wyScroll.first.el.nativeElement.querySelectorAll('ul li'); //all li tags under this scroll element; el was definded in wy-scroll constructor
     if(songListRefs.length){
@@ -135,7 +141,7 @@ export class WyPlayerPanelComponent implements OnInit, OnChanges {
         this.wyScroll.first.scrollToElement(currentLi, speed, false, false );
       }
     }
-    
   }
+
 
 }

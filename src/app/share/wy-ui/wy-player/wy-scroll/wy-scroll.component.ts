@@ -20,7 +20,7 @@ BScroll.use(MouseWheel);
 })
 export class WyScrollComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() refreshDelay = 50;
-  @Input() songData: any[];
+  @Input() data: any[];
   private bs: BScroll;
 
   @Output() private onScrollEnd = new EventEmitter<number>();
@@ -43,7 +43,7 @@ export class WyScrollComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['songData']){
+    if(changes['data']){
       this.refreshScroll();
     }
   }
