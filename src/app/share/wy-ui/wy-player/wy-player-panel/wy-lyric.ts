@@ -114,9 +114,9 @@ export class WyLyric{
         if (!this.playing){
             this.playing = true;
         }
-        this.curNum = this.findCurNum(startTime);
-        console.log("🚀 ~ file: wy-lyric.ts ~ line 109 ~ WyLyric ~ play ~ curNum", this.curNum);
-        this.startStamp = Date.now() - startTime;
+        this.curNum = this.findCurNum(startTime);//based a initial time, to calculate initial curNum, if it start from beginning, then the startTime is 0, curNum also will be 0, if it restart after a pause, then the startTime is a positive number, so as curNum 
+        console.log("curNum", this.curNum);
+        this.startStamp = Date.now() - startTime; // if startTime > 0, it set a virtual startStamp in past
 
         if(this.curNum < this.lines.length){
             clearTimeout(this.timer);
@@ -126,10 +126,10 @@ export class WyLyric{
 
     private playReset(){
         let line = this.lines[this.curNum];
-        const delay = line.time - (Date.now() - this.startStamp)
+        const delay = line.time - (Date.now() - this.startStamp) // calculate time interval based on time of each line of lyric
         this.timer = setTimeout(() =>{
-            this.callHandler(this.curNum++);
-            if(this.curNum < this.lines.length && this.playing){
+            this.callHandler(this.curNum++); //emit a curNum and add 1
+            if(this.curNum < this.lines.length && this.playing){ //if still within the song, reset play()
                 this.playReset();
             }
         }, delay)
@@ -157,11 +157,11 @@ export class WyLyric{
             this.play(startTime);
         } else {
             this.stop();
-            this.pauseStamp = now;
+            this.pauseStamp = now; //reset pauseStamp
         }
     }
 
-    private stop(){
+    stop(){
         if(this.playing){
             this.playing = false;
         }
