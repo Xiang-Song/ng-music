@@ -11,6 +11,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { WyUiModule } from './wy-ui/wy-ui.module';
 
 
@@ -36,6 +37,7 @@ import { WyUiModule } from './wy-ui/wy-ui.module';
     NzRadioModule,
     NzPaginationModule,
     NzTagModule,
+    NzTableModule,
     WyUiModule,
   ],
 })
