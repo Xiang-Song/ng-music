@@ -8,6 +8,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 import { WyUiModule } from './wy-ui/wy-ui.module';
 
 
@@ -30,6 +33,9 @@ import { WyUiModule } from './wy-ui/wy-ui.module';
     NzInputModule,
     NzCarouselModule,
     NzModalModule,
+    NzRadioModule,
+    NzPaginationModule,
+    NzTagModule,
     WyUiModule,
   ],
 })

@@ -125,12 +125,13 @@ export class WyPlayerComponent implements OnInit {
     this.store$.dispatch(SetPlayMode({ playMode: modeTypes[++this.modeCount % 3] }));
   }
 
-  onClickOutSide(){
-  console.log("~ onClickOutSide");
-  this.showVolumePanel = false;
-  this.showPanel = false;
-  this.bindFlag = false;
-    
+  onClickOutSide(target: HTMLElement){
+    console.log("~ onClickOutSide");
+    if (target.dataset.act !== 'delete'){
+      this.showVolumePanel = false;
+      this.showPanel = false;
+      this.bindFlag = false;
+    }
   }
 
   // slider control song
@@ -166,6 +167,8 @@ export class WyPlayerComponent implements OnInit {
     this[type]= !this[type];
     this.bindFlag = (this.showVolumePanel || this.showPanel);
   }
+
+ 
 
   // private bindDocumentClickListener(){
   //   if(!this.winClick){

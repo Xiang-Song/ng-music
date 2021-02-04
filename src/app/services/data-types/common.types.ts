@@ -36,14 +36,31 @@ export interface SongUrl {
 //SongSheet
 export interface SongSheet {
   id: number;
+  userId: number;
   name: string;
   picUrl: string;
+  coverImgUrl: string;
   playCount: number;
+  tags: string[];
+  createTime: number;
+  creator: { nickname: string; avatarUrl: string; };
+  description: string;
+  subscribedCount: number;
+  shareCount: number;
+  commentCount: number;
+  subscribed: boolean;
   tracks: Song[];
+  trackCount: number;
 }
 
 //lyric
 export interface Lyric {
   lyric: string;
   tlyric: string;
+}
+
+// sheet list
+export interface sheetList {
+  playlists: SongSheet[];
+  total: number;
 }

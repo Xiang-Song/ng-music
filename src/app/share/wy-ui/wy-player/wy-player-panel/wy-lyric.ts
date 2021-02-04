@@ -2,9 +2,9 @@ import { from, Subject, Subscription, timer, zip } from "rxjs";
 import { skip } from "rxjs/internal/operators";
 import { Lyric } from "src/app/services/data-types/common.types";
 
-const timeExp = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
+// const timeExp = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
 // const timeExp = /\[(\d{2}):(\d{2})(\.\d{2,3})?\]/;
-// const timeExp = /\[(\d{1,2}):(\d{2})(?:\.(\d{2,3}))?\]/;
+const timeExp = /\[(\d{1,2}):(\d{2})(?:\.(\d{2,3}))?\]/;
 
 export interface BaseLyricLine {
     txt: string; 
@@ -107,7 +107,7 @@ export class WyLyric{
                 const time = Number(result[1]) * 60000 + Number(result[2]) * 1000 + _thirdResult;
                 this.lines.push({ txt, txtCn, time});
             }
-
+            this.lines.sort((a, b) => (a.time > b.time) ? 1 : -1)
         }
     }
 

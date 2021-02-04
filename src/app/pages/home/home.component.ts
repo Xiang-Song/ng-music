@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 import { map } from 'rxjs/internal/operators';
 import { Banner, HotTag, Singer, SongSheet } from 'src/app/services/data-types/common.types';
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private sheetServe: SheetService,
     private batchActionsServe: BatchActionsService
     ) { 
@@ -56,6 +57,10 @@ export class HomeComponent implements OnInit {
     this.sheetServe.playSheet(id).subscribe(list => {
       this.batchActionsServe.selectPlayList({list, index: 0});
     })
+  }
+
+  toInfo(id: number){
+    this.router.navigate(['/sheetInfo', id]);
   }
 
 }

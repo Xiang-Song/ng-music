@@ -8,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ng-music';
+  menu = [{
+    label: 'Find',
+    path: '/home'
+  },{
+    label: 'Menu',
+    path: '/sheet'
+}]
 }
